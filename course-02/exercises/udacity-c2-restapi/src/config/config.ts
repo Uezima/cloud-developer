@@ -13,10 +13,13 @@ export const config = {
     "aws_media_bucket": process.env.AWS_MEDIA_BUCKET
   },
   "prod": {
-    "username": "",
-    "password": "",
-    "database": "udagram_prod",
-    "host": "",
+    "username": process.env.POSTGREESS_USERNAME,
+    "password": process.env.POSTGREESS_PASSWORD,
+    "database": process.env.POSTGREESS_DATABASE,
+    "host": process.env.POSTGREESS_HOST,
     "dialect": "postgres"
+  },
+  "jwt": {
+    "secret": process.env.JWT_SECRET
   }
 }
