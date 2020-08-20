@@ -1,6 +1,12 @@
 <div class="feed">
-  <app-feed-item 
-    *ngFor="let item of feedItems"
-    [feedItem]="item">
-  </app-feed-item>
+  <div *ngFor="let item of feedItems">
+    <app-feed-item 
+      [feedItem]="item">
+    </app-feed-item>
+    <ion-button 
+          (click) = "applyFilter(item)"
+          color="primary">
+          Apply Filter
+    </ion-button>
+  </div>
 </div>

@@ -6,6 +6,7 @@ import { FeedItem } from '../feed/models/feed-item.model';
 import { catchError, tap, map } from 'rxjs/operators';
 
 const API_HOST = environment.apiHost;
+const FILTER_API_HOST = environment.filterApiHost;
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,18 @@ export class ApiService {
             });
   }
 
+  getFilterEndpoint(imageUrl: string): Promise<any> {
+    const url = `${FILTER_API_HOST}filteredimage?image_url=${encodeURIComponent(imageUrl)}`;
+    const req = this.http.get(url, { responseType: 'arraybuffer' });
+
+    return req
+            .toPromise()
+            .catch((e) => {
+              this.handleError(e);
+              throw e;
+            });
+  }
+
   post(endpoint, data): Promise<any> {
     const url = `${API_HOST}${endpoint}`;
     return this.http.post<HttpEvent<any>>(url, data, this.httpOptions)
@@ -65,6 +78,25 @@ export class ApiService {
         this.http.request(req).subscribe((resp) => {
         if (resp && (<any> resp).status && (<any> resp).status === 200) {
           resolve(this.post(endpoint, payload));
+        }
+      });
+    });
+  }
+
+  async applyFilter(imageUrl: string, fileName: string): Promise<any> {
+    const signed_url = (await this.get(`/feed/signed-url/${fileName}`)).url;
+
+    const file = await this.getFilterEndpoint(imageUrl);
+    const headers = new HttpHeaders({'Content-Type': 'image/jpeg'});
+    const req = new HttpRequest( 'PUT', signed_url, file,
+                                  {
+                                    headers: headers,
+                                    reportProgress: true, // track progress
+                                  });
+    return new Promise ( resolve => {
+        this.http.request(req).subscribe((resp) => {
+        if (resp && (<any> resp).status && (<any> resp).status === 200) {
+          resolve();
         }
       });
     });

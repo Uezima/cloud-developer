@@ -3,6 +3,7 @@ import { FeedItem, feedItemMocks } from '../models/feed-item.model';
 import { BehaviorSubject } from 'rxjs';
 
 import { ApiService } from '../../api/api.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,9 @@ export class FeedProviderService {
     return res;
   }
 
+  async applyFilter(url: string, fileName: string): Promise<any> {
+    await this.api.applyFilter(url, fileName);
+  }
 }
 
 // async getFeed() {

@@ -30,5 +30,13 @@ export class FeedListComponent implements OnInit, OnDestroy {
     }
   }
 
+  async applyFilter(item: any){
+    let urlParts = item.url.split('/');
+    let fileName = urlParts[urlParts.length - 1].substring('?');
+    console.log(fileName)
+    await this.feed.applyFilter(item.url, fileName)
+    await this.feed.getFeed();
+  }
+
 
 }
